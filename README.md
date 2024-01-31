@@ -64,7 +64,12 @@ I am not a Go developer. So, if you find any issue, please create an issue or pu
 
 
 # Release Note
-### 1.0.0 (Current)
+### 1.1.1 (Current)
+- Password now supports any ASCII value. In v1.0.0 only numbers were allowed as password
+- Using `rand.New(rand.NewSource(seed))` instead of deprecated `rand.seed(seed)`
+- Fixed wrong output on decryption: `Done creating image decrypt.png` -> `Done creating image`
+
+### 1.0.0
 - Can encrypt & decrypt images
 
 # Planned Features

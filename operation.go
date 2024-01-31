@@ -9,7 +9,6 @@ import (
 	"image/png"
 	"math/rand"
 	"os"
-	"strconv"
 	"time"
 )
 
@@ -36,7 +35,7 @@ func operation(img image.Image, password string, encrypt bool) {
 	}
 
 	fmt.Println("\nStarting operation...")
-	defer fmt.Println("\nOperation complete.")
+	defer fmt.Println("\nOperation completed")
 
 	rgba := image.NewRGBA(bounds)
 	draw.Draw(rgba, rgba.Bounds(), img, img.Bounds().Min, draw.Src)
@@ -76,7 +75,7 @@ func operation(img image.Image, password string, encrypt bool) {
 	fmt.Println("\nOperation took", endTime.Sub(startTime))
 
 	fmt.Println("\nCreating image file...")
-	defer fmt.Println("\nDone creating image", DecryptedFilename)
+	defer fmt.Println("\nDone creating image")
 
 	startTime = time.Now() // file write start timer
 
@@ -101,17 +100,15 @@ func generateUniqueRandomArray(length int, seed string) ([]int, error) {
 	var start = 0
 	var end = length - 1
 
-	seedValue, err := strconv.Atoi(seed)
-	if err != nil {
-		return nil, err
-	}
-	rand.Seed(int64(seedValue))
+	seedValue := convertToAscii(seed)
+
+	rng := rand.New(rand.NewSource(int64(seedValue)))
 
 	numbers := make([]int, length)
 	used := make(map[int]bool)
 
 	for i := 0; i < length; {
-		randomNumber := rand.Intn(end-start+1) + start
+		randomNumber := rng.Intn(end - start + 1)
 		if !used[randomNumber] {
 			numbers[i] = randomNumber
 			used[randomNumber] = true
@@ -132,4 +129,19 @@ func containsElement(target int) bool {
 		}
 	}
 	return false
+}
+
+// convertToAscii converts ASCII characters to decimal values
+// str: string from which to generate the ASCII values
+// returns the ASCII  values consolidated
+func convertToAscii(str string) int {
+	var asciiSlice []int
+	result := 0
+
+	for i := 0; i < len(str); i++ {
+		asciiSlice = append(asciiSlice, int(str[i]))
+		result = (result * 100) + int(str[i])
+	}
+
+	return result
 }
