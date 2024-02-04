@@ -3,13 +3,12 @@ package main
 import (
 	"fmt"
 	"image"
-	"image/draw"
 	"image/jpeg"
 	"image/png"
 	"os"
 )
 
-const VERSION string = "1.0.0"
+const VERSION string = "Unstable 2.0.0"
 const FILENAME string = "image.png"
 const EncryptedFilename string = "encrypt.png"
 const DecryptedFilename string = "decrypt.png"
@@ -38,16 +37,14 @@ func main() {
 			panic(err)
 		}
 
-		rgba := image.NewRGBA(img.Bounds())
-		draw.Draw(rgba, rgba.Bounds(), img, img.Bounds().Min, draw.Src)
-		operation(img, password, true)
+		multiThreadOperation(img, password, true)
 	} else if choice == "d" {
 		img, err := openAndDecodeImage(EncryptedFilename)
 		if err != nil {
 			panic(err)
 		}
 
-		operation(img, password, false)
+		multiThreadOperation(img, password, false)
 	}
 
 }
