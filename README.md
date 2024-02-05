@@ -1,7 +1,7 @@
 <div align="center"><h1>GoPixEnc</h1></div>
 <div align="center"><a href="https://github.com/fardinkamal62/PixEnc">PixEnc</a> in Go</div>
 <div align="center">Encrypt image by manipulating pixels</div>
-<div align="center" style="color: grey"><sub>Version: Beta 2.1.0</sub></div>
+<div align="center" style="color: grey"><sub>Version: Beta 2.1.1</sub></div>
 <div align="center">
   <strong>
     <a href="https://fardinkamal62.vercel.app/projects/pixenc">Website</a>
@@ -29,22 +29,23 @@ This version is on beta due to performance issue
 
 # Example
 
-## Original Image
-
 **Original Image**
 
 ![Original Image](https://i.ibb.co/717YFZ3/image.png)
 ![Original Image](https://i.ibb.co/GPrdJjp/image.png)
+<img src="https://i.ibb.co/wd6dLdg/barakah.jpg" alt="barakah-original" style="width:20%; height: auto"/>
 
 **Encrypted Image**
 
 ![Encrypted Image](https://i.ibb.co/tQF5Pn7/encrypt.png)
 ![Encrypted Image](https://i.ibb.co/cCzGLgL/encrypt.png)
+<img src="https://i.ibb.co/z7HHJMZ/encrypt.png" alt="barakah-encrypted" style="width:20%; height: auto"/>
 
 **Decrypted Image**
 
 ![Decrypted Image](https://i.ibb.co/9rhKkgr/decrypt.png)
 ![Decrypted Image](https://i.ibb.co/HgSTFV5/decrypt.png)
+<img src="https://i.ibb.co/5K0GgQ0/decrypt.png" alt="barakah-decrypted" style="width:20%; height: auto"/>
 
 # Build
 
@@ -77,12 +78,17 @@ This version is on beta due to performance issue
 
 # Release Note
 
-### 2.1.0 (Current)
+### Beta 2.1.1 (Current)
+
+- Image can be image.png or image.jpg
+- Updated README with new example images
+
+### Beta 2.1.0
 
 - Fixed issue with multithreading of version 2.0.0
 - New algorithm to generate random numbers for pixels
 
-### 2.0.0 (Unstable, Current)
+### 2.0.0 (Unstable)
 
 - Multithreading
 

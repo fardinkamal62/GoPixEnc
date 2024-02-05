@@ -8,8 +8,9 @@ import (
 	"os"
 )
 
-const VERSION string = "Beta 2.1.0"
+const VERSION string = "Beta 2.1.1"
 const FILENAME string = "image.png"
+const JPGFILENAME string = "image.jpg"
 const EncryptedFilename string = "encrypt.png"
 const DecryptedFilename string = "decrypt.png"
 
@@ -50,6 +51,10 @@ func main() {
 }
 
 func openAndDecodeImage(filename string) (image.Image, error) {
+	if _, err := os.Stat(filename); os.IsNotExist(err) {
+		filename = JPGFILENAME
+	}
+
 	file, err := os.Open(filename)
 	if err != nil {
 		return nil, err
