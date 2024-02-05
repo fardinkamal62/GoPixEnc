@@ -8,7 +8,7 @@ import (
 	"os"
 )
 
-const VERSION string = "Unstable 2.0.0"
+const VERSION string = "Beta 2.1.0"
 const FILENAME string = "image.png"
 const EncryptedFilename string = "encrypt.png"
 const DecryptedFilename string = "decrypt.png"

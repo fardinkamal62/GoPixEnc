@@ -164,9 +164,17 @@ func generateUniqueRandomArray(length int, seed string) ([]int, error) {
 
 	for i := 0; i < length; {
 		randomNumber := rng.Intn(end - start + 1)
-		if !used[randomNumber] {
+
+		if used[i] && used[randomNumber] {
+			i++
+			continue
+		}
+		if !used[i] && !used[randomNumber] {
 			numbers[i] = randomNumber
+			numbers[randomNumber] = i
+
 			used[randomNumber] = true
+			used[i] = true
 			i++
 		}
 	}
