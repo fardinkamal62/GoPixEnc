@@ -1,7 +1,7 @@
 <div align="center"><h1>GoPixEnc</h1></div>
 <div align="center"><a href="https://github.com/fardinkamal62/PixEnc">PixEnc</a> in Go</div>
 <div align="center">Encrypt image by manipulating pixels</div>
-<div align="center" style="color: grey"><sub>Version: Beta 2.1.1</sub></div>
+<div align="center" style="color: grey"><sub>Version: 2.2.0</sub></div>
 <div align="center">
   <strong>
     <a href="https://fardinkamal62.vercel.app/projects/pixenc">Website</a>
@@ -78,7 +78,12 @@ This version is on beta due to performance issue
 
 # Release Note
 
-### Beta 2.1.1 (Current)
+### 2.2.0 (Current)
+
+- Dialogue box to choose image
+- Included example image in the repository
+
+### Beta 2.1.1
 
 - Image can be image.png or image.jpg
 - Updated README with new example images
@@ -126,5 +131,5 @@ gets 2 as its random number, 2 will get 55 as its random number. I'm still think
 
 - [x] Multi-threading
 - [x] Better random number generation
-- [ ] File explorer
+- [x] File explorer
 - [ ] GUI

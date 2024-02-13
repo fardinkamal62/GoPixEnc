@@ -2,3 +2,6 @@
 *.jpeg
 *.png
 .idea
+
+# Allow example.jpg
+!example.jpg

@@ -2,25 +2,27 @@ package main
 
 import (
 	"fmt"
+	"github.com/sqweek/dialog"
 	"image"
 	"image/jpeg"
 	"image/png"
 	"os"
 )
 
-const VERSION string = "Beta 2.1.1"
-const FILENAME string = "image.png"
-const JPGFILENAME string = "image.jpg"
+const VERSION string = "2.2.0"
+const ExampleImage string = "example.jpg"
 const EncryptedFilename string = "encrypt.png"
 const DecryptedFilename string = "decrypt.png"
 
 func main() {
 	fmt.Println("GoPixEnc v" + VERSION + "!")
 	fmt.Println("PixEnc implementation in Go.")
-	fmt.Print("\nI want to encode(e)/decode(d): ")
+	fmt.Print("\nI want to encrypt(e)/decrypt(d): ")
+
+	FILENAME, err := dialog.File().Title("Select a file").SetStartDir(".").Filter("All image files (*.png;*.jpg;*.jpeg)", "jpg", "jpeg", "png").Load()
 
 	var choice string
-	_, err := fmt.Scan(&choice)
+	_, err = fmt.Scan(&choice)
 	if err != nil {
 		panic(err)
 	}
@@ -33,6 +35,10 @@ func main() {
 	}
 
 	if choice == "e" {
+		if err != nil {
+			fmt.Println("Error:", err)
+			return
+		}
 		img, err := openAndDecodeImage(FILENAME)
 		if err != nil {
 			panic(err)
@@ -52,7 +58,7 @@ func main() {
 
 func openAndDecodeImage(filename string) (image.Image, error) {
 	if _, err := os.Stat(filename); os.IsNotExist(err) {
-		filename = JPGFILENAME
+		filename = ExampleImage
 	}
 
 	file, err := os.Open(filename)
