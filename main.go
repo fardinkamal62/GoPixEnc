@@ -2,27 +2,43 @@ package main
 
 import (
 	"fmt"
+	"github.com/sqweek/dialog"
 	"image"
-	"image/draw"
 	"image/jpeg"
 	"image/png"
 	"os"
 )
 
-const VERSION string = "1.0.0"
-const FILENAME string = "image.png"
-const EncryptedFilename string = "encrypt.png"
-const DecryptedFilename string = "decrypt.png"
+const Version string = "2.2.1"
+const ExampleImage string = "images/example.jpg"
+const EncryptedFilename string = "images/encrypt.png"
+const DecryptedFilename string = "images/decrypt.png"
 
 func main() {
-	fmt.Println("GoPixEnc v" + VERSION + "!")
+	fmt.Println("GoPixEnc v" + Version + "!")
 	fmt.Println("PixEnc implementation in Go.")
-	fmt.Print("\nI want to encode(e)/decode(d): ")
+	fmt.Print("\nI want to encrypt(e)/decrypt(d): ")
 
 	var choice string
-	_, err := fmt.Scan(&choice)
+	var FILENAME string
+	var err error
+
+	_, err = fmt.Scan(&choice)
 	if err != nil {
 		panic(err)
+	}
+
+	for {
+		FILENAME, err = dialog.File().Title("Select a file").SetStartDir("images").Filter("All image files (*.png;*.jpg;*.jpeg)", "jpg", "jpeg", "png").Load()
+		if err != nil {
+			if _, err := os.Stat(ExampleImage); os.IsNotExist(err) {
+				fmt.Println("Image file not found: " + ExampleImage + " (or select a file manually)")
+				continue // Continue the loop to prompt again
+			}
+			FILENAME = ExampleImage
+		}
+		fmt.Println("\nSelected file:", FILENAME+"\n")
+		break // Break the loop if an image is selected
 	}
 
 	fmt.Print("Enter password: ")
@@ -33,25 +49,32 @@ func main() {
 	}
 
 	if choice == "e" {
+		if err != nil {
+			fmt.Println("Error:", err)
+			return
+		}
 		img, err := openAndDecodeImage(FILENAME)
 		if err != nil {
 			panic(err)
 		}
 
-		rgba := image.NewRGBA(img.Bounds())
-		draw.Draw(rgba, rgba.Bounds(), img, img.Bounds().Min, draw.Src)
-		operation(img, password, true)
+		fmt.Println("Encrypting...")
+		multiThreadOperation(img, password, true)
 	} else if choice == "d" {
 		img, err := openAndDecodeImage(EncryptedFilename)
 		if err != nil {
 			panic(err)
 		}
 
-		operation(img, password, false)
+		fmt.Println("Decrypting...")
+		multiThreadOperation(img, password, false)
 	}
 
 }
 
+// openAndDecodeImage opens and decodes the image.
+// filename: the filename
+// returns: the image and an error
 func openAndDecodeImage(filename string) (image.Image, error) {
 	file, err := os.Open(filename)
 	if err != nil {
