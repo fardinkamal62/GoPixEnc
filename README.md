@@ -1,7 +1,7 @@
 <div align="center"><h1>GoPixEnc</h1></div>
 <div align="center"><a href="https://github.com/fardinkamal62/PixEnc">PixEnc</a> in Go</div>
 <div align="center">Encrypt image by manipulating pixels</div>
-<div align="center" style="color: grey"><sub>Version: [version]</sub></div>
+<div align="center" style="color: grey"><sub>Version: 2.2.1</sub></div>
 <div align="center">
   <strong>
     <a href="https://fardinkamal62.vercel.app/projects/pixenc">Website</a>
@@ -154,5 +154,3 @@ gets 2 as its random number, 2 will get 55 as its random number. I'm still think
 - [x] Better random number generation
 - [x] File explorer
 - [ ] GUI
-
-[version]: 2.2.1
