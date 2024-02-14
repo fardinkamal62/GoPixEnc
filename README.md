@@ -1,7 +1,7 @@
 <div align="center"><h1>GoPixEnc</h1></div>
 <div align="center"><a href="https://github.com/fardinkamal62/PixEnc">PixEnc</a> in Go</div>
 <div align="center">Encrypt image by manipulating pixels</div>
-<div align="center" style="color: grey"><sub>Version: 2.2.0</sub></div>
+<div align="center" style="color: grey"><sub>Version: [version]</sub></div>
 <div align="center">
   <strong>
     <a href="https://fardinkamal62.vercel.app/projects/pixenc">Website</a>
@@ -50,8 +50,24 @@ This version is on beta due to performance issue
 # Build
 
 - Clone the repository
-- Run `go build` to build & generate an executable file
-- Run `go run .` to run the program
+- Run `go build -o build/GoPixEnc` to build & generate an executable file
+- Run `go run .` to run the program without building or `build/GoPixEnc` to run the executable file
+
+### Cross-Platform Build
+
+**Important Variables**
+- `GOOS` for target OS
+- `GOARCH` for target architecture
+
+**Example**
+
+To build for current OS & architecture: `go build -o build/GoPixEnc`
+
+To build for Windows: `GOOS=windows GOARCH=amd64 go build -o build/GoPixEnc.exe`
+
+To build for Linux: `GOOS=linux GOARCH=amd64 go build -o build/GoPixEnc`
+
+*Change GOARCH according to your system architecture
 
 # Usage
 
@@ -60,25 +76,30 @@ This version is on beta due to performance issue
 
 ### Encrypting Image
 
-1. Keep the image you want to encrypt in the same directory as the executable file
-2. Rename the image to `image.png`(if PNG) or `image.jpg`(if JPG)
-3. Run the executable file
-4. In choice menu, select `e` to encrypt image
-5. Enter the password you want to use to encrypt the image
-6. It will generate a file named `encrypt.png`
+1. Run the executable file
+2. Chose the image you want to encrypt from the file explorer or leave it empty to use the default image
+3. In choice menu, select `e` to encrypt image
+4. Enter the password you want to use to encrypt the image
+5. It will generate a file named `encrypt.png` in the same directory as the executable file
 
 ### Decrypting Image
 
-1. Keep the image you want to decrypt in the same directory as the executable file | If you have encrypted the image
-   using this program, then you can skip this step
-2. Run the executable file
+1. Run the executable file
+2. Chose the image you want to decrypt from the file explorer
 3. In choice menu, select `d` to decrypt image
 4. Enter the password you used to encrypt the image
-5. It will generate a file named `decrypt.png`
+5. It will generate a file named `decrypt.png` in the same directory as the executable file
 
 # Release Note
 
-### 2.2.0 (Current)
+### 2.2.1 (Current)
+
+- File explorer UX improvement: Now, it will show the file explorer after encryption/decryption choice is made & file explorer will remain open until a file is selected
+- Better error handling in file explorer
+- Updated package versions
+- Separate images folder
+
+### 2.2.0
 
 - Dialogue box to choose image
 - Included example image in the repository
@@ -133,3 +154,5 @@ gets 2 as its random number, 2 will get 55 as its random number. I'm still think
 - [x] Better random number generation
 - [x] File explorer
 - [ ] GUI
+
+[version]: 2.2.1

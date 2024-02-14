@@ -2,6 +2,8 @@
 *.jpeg
 *.png
 .idea
+build/*
+images/*
 
 # Allow example.jpg
-!example.jpg
+!images/example.jpg

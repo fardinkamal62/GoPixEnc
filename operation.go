@@ -133,7 +133,11 @@ func multiThreadOperation(img image.Image, password string, encrypt bool) {
 		}
 	}
 	fmt.Println("\nCreating image file...")
-	defer fmt.Println("\nDone creating image")
+	if encrypt {
+		defer fmt.Println("\nDone creating image: " + EncryptedFilename)
+	} else {
+		defer fmt.Println("\nDone creating image: " + DecryptedFilename)
+	}
 
 	startTime := time.Now() // file write start timer
 

@@ -9,22 +9,36 @@ import (
 	"os"
 )
 
-const VERSION string = "2.2.0"
-const ExampleImage string = "example.jpg"
-const EncryptedFilename string = "encrypt.png"
-const DecryptedFilename string = "decrypt.png"
+const Version string = "2.2.1"
+const ExampleImage string = "images/example.jpg"
+const EncryptedFilename string = "images/encrypt.png"
+const DecryptedFilename string = "images/decrypt.png"
 
 func main() {
-	fmt.Println("GoPixEnc v" + VERSION + "!")
+	fmt.Println("GoPixEnc v" + Version + "!")
 	fmt.Println("PixEnc implementation in Go.")
 	fmt.Print("\nI want to encrypt(e)/decrypt(d): ")
 
-	FILENAME, err := dialog.File().Title("Select a file").SetStartDir(".").Filter("All image files (*.png;*.jpg;*.jpeg)", "jpg", "jpeg", "png").Load()
-
 	var choice string
+	var FILENAME string
+	var err error
+
 	_, err = fmt.Scan(&choice)
 	if err != nil {
 		panic(err)
+	}
+
+	for {
+		FILENAME, err = dialog.File().Title("Select a file").SetStartDir("images").Filter("All image files (*.png;*.jpg;*.jpeg)", "jpg", "jpeg", "png").Load()
+		if err != nil {
+			if _, err := os.Stat(ExampleImage); os.IsNotExist(err) {
+				fmt.Println("Image file not found: " + ExampleImage + " (or select a file manually)")
+				continue // Continue the loop to prompt again
+			}
+			FILENAME = ExampleImage
+		}
+		fmt.Println("\nSelected file:", FILENAME+"\n")
+		break // Break the loop if an image is selected
 	}
 
 	fmt.Print("Enter password: ")
@@ -44,6 +58,7 @@ func main() {
 			panic(err)
 		}
 
+		fmt.Println("Encrypting...")
 		multiThreadOperation(img, password, true)
 	} else if choice == "d" {
 		img, err := openAndDecodeImage(EncryptedFilename)
@@ -51,16 +66,16 @@ func main() {
 			panic(err)
 		}
 
+		fmt.Println("Decrypting...")
 		multiThreadOperation(img, password, false)
 	}
 
 }
 
+// openAndDecodeImage opens and decodes the image.
+// filename: the filename
+// returns: the image and an error
 func openAndDecodeImage(filename string) (image.Image, error) {
-	if _, err := os.Stat(filename); os.IsNotExist(err) {
-		filename = ExampleImage
-	}
-
 	file, err := os.Open(filename)
 	if err != nil {
 		return nil, err
