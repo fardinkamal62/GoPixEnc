@@ -1,7 +1,7 @@
 <div align="center"><h1>GoPixEnc</h1></div>
 <div align="center"><a href="https://github.com/fardinkamal62/PixEnc">PixEnc</a> in Go</div>
 <div align="center">Encrypt image by manipulating pixels</div>
-<div align="center" style="color: grey"><sub>Version: 2.2.1</sub></div>
+<div align="center" style="color: grey"><sub>Version: 2.2.2</sub></div>
 <div align="center">
   <strong>
     <a href="https://fardinkamal62.vercel.app/projects/pixenc">Website</a>
@@ -9,19 +9,6 @@
     <a href="https://docs.google.com/document/d/173xWvlrEQd1esI3rtD1SmtqtZ1rmFFwKzwRIdWKSTQw/edit?usp=sharing">Docs</a>
     </strong>
 </div>
-
-<hr />
-
-This is a Go implementation of my [PixEnc](https://github.com/fardinkamal62/PixEnc) project, which was originally
-written in Python.
-
-I made this project to learn Go and I tried a different approach of encrypting image pixels.
-
-I am not a Go developer. So, if you find any issue, please create an issue or pull request.
-
-# Note
-
-This version is on beta due to performance issue
 
 # Technologies
 
@@ -50,8 +37,8 @@ This version is on beta due to performance issue
 # Build
 
 - Clone the repository
-- Run `go build -o build/GoPixEnc` to build & generate an executable file
-- Run `go run .` to run the program without building or `build/GoPixEnc` to run the executable file
+- Run `go build -o build/GoPixEnc` to build & generate an executable file at `build` folder
+- Run `go run .` to run the program without building 
 
 ### Cross-Platform Build
 
@@ -61,13 +48,11 @@ This version is on beta due to performance issue
 
 **Example**
 
-To build for current OS & architecture: `go build -o build/GoPixEnc`
+To build for current OS & architecture: `go build -o build/GoPixEnc_vx.y.z_os_arch`
 
-To build for Windows: `GOOS=windows GOARCH=amd64 go build -o build/GoPixEnc.exe`
+To build for Windows: `GOOS=windows GOARCH=amd64 go build -o build/GoPixEnc_vx.y.z_windows_arch.exe`
 
-To build for Linux: `GOOS=linux GOARCH=amd64 go build -o build/GoPixEnc`
-
-*Change GOARCH according to your system architecture
+To build for Linux: `GOOS=linux GOARCH=amd64 go build -o build/GoPixEnc_vx.y.z_linux_arch`
 
 # Usage
 
@@ -92,7 +77,11 @@ To build for Linux: `GOOS=linux GOARCH=amd64 go build -o build/GoPixEnc`
 
 # Release Note
 
-### 2.2.1 (Current)
+### 2.2.2 (Current)
+
+- Create `images` folder if not exists
+
+### 2.2.1
 
 - File explorer UX improvement: Now, it will show the file explorer after encryption/decryption choice is made & file explorer will remain open until a file is selected
 - Better error handling in file explorer

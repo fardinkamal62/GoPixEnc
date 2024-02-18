@@ -9,7 +9,7 @@ import (
 	"os"
 )
 
-const Version string = "2.2.1"
+const Version string = "2.2.2"
 const ExampleImage string = "images/example.jpg"
 const EncryptedFilename string = "images/encrypt.png"
 const DecryptedFilename string = "images/decrypt.png"
@@ -47,6 +47,8 @@ func main() {
 	if err != nil {
 		panic(err)
 	}
+
+	checkFolderExistence()
 
 	if choice == "e" {
 		if err != nil {
@@ -114,4 +116,14 @@ func openAndDecodeImage(filename string) (image.Image, error) {
 	}
 
 	return img, nil
+}
+
+// checkFolderExistence checks if the images folder exists and creates it if it doesn't.
+func checkFolderExistence() {
+	if _, err := os.Stat("images"); os.IsNotExist(err) {
+		err := os.Mkdir("images", 0755)
+		if err != nil {
+			panic(err)
+		}
+	}
 }
