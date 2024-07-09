@@ -9,6 +9,8 @@
     <a href="https://docs.google.com/document/d/173xWvlrEQd1esI3rtD1SmtqtZ1rmFFwKzwRIdWKSTQw/edit?usp=sharing">Docs</a>
     </strong>
 </div>
+<br>
+GoPixEnc is an application written in Go, designed for encrypting and decrypting images securely. This app was developed as a project submission for the CSE Spring Fest 2024 at <a href="https://diu.ac">Dhaka International University</a>
 
 # Technologies
 
