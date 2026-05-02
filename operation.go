@@ -1,6 +1,8 @@
 package main
 
 import (
+	"crypto/sha256"
+    "encoding/binary"
 	"fmt"
 	"github.com/schollz/progressbar/v3"
 	"image"
@@ -21,10 +23,11 @@ import (
 // end: end index (inclusive) of the random numbers
 // wg: wait group for the threads
 // rgba: image to write to
+// quad: RGBA xor values
 // history: history of the pixels
 // historyMutex: mutex for the history
 // rgbaMutex: mutex for the image
-func operation(img *image.Image, randomNumbers *[]int, start int, end int, wg *sync.WaitGroup, rgba **image.RGBA, history *map[int]bool, historyMutex *sync.Mutex, rgbaMutex *sync.Mutex) {
+func operation(img *image.Image, randomNumbers *[]int, start int, end int, wg *sync.WaitGroup, rgba **image.NRGBA, quad *[]int, history *map[int]bool, historyMutex *sync.Mutex, rgbaMutex *sync.Mutex) {
 	// Initialize variables
 	bounds := (*img).Bounds() // get image bounds (width and height)
 	width, height := bounds.Max.X, bounds.Max.Y
@@ -55,15 +58,30 @@ func operation(img *image.Image, randomNumbers *[]int, start int, end int, wg *s
 
 		currentX := i % width
 		currentY := i / width
-		currentR, currentG, currentB, currentA := (*img).At(currentX, currentY).RGBA()
+		currentColor := color.NRGBAModel.Convert((*img).At(currentX, currentY)).(color.NRGBA)
 
 		newX := (*randomNumbers)[i] % width
 		newY := (*randomNumbers)[i] / width
-		newR, newG, newB, newA := (*img).At(newX, newY).RGBA()
+		newColor := color.NRGBAModel.Convert((*img).At(newX, newY)).(color.NRGBA)
+
+		xorR := uint8((*quad)[0])
+		xorG := uint8((*quad)[1])
+		xorB := uint8((*quad)[2])
+		xorA := uint8((*quad)[3])
 
 		rgbaMutex.Lock()
-		(*rgba).SetRGBA(newX, newY, color.RGBA{R: uint8(currentR >> 8), G: uint8(currentG >> 8), B: uint8(currentB >> 8), A: uint8(currentA >> 8)})
-		(*rgba).SetRGBA(currentX, currentY, color.RGBA{R: uint8(newR >> 8), G: uint8(newG >> 8), B: uint8(newB >> 8), A: uint8(newA >> 8)})
+		(*rgba).SetNRGBA(newX, newY, color.NRGBA{
+			R: currentColor.R ^ xorR,
+			G: currentColor.G ^ xorG,
+			B: currentColor.B ^ xorB,
+			A: currentColor.A ^ xorA,
+		})
+		(*rgba).SetNRGBA(currentX, currentY, color.NRGBA{
+			R: newColor.R ^ xorR,
+			G: newColor.G ^ xorG,
+			B: newColor.B ^ xorB,
+			A: newColor.A ^ xorA,
+		})
 		rgbaMutex.Unlock()
 	}
 	endTime := time.Now()
@@ -87,10 +105,16 @@ func multiThreadOperation(img image.Image, password string, encrypt bool) {
 	pixels := width * height
 
 	var rgbaMutex sync.Mutex
-	rgba := image.NewRGBA(bounds)
+	rgba := image.NewNRGBA(bounds)
 	draw.Draw(rgba, rgba.Bounds(), img, img.Bounds().Min, draw.Src)
 
-	randomNumbers, err := generateUniqueRandomArray(pixels, password)
+	seedValue := convertToAscii(password)
+	randomNumbers, err := generateUniqueRandomArray(pixels, seedValue)
+	if err != nil {
+		panic(err)
+	}
+
+	quad, err := generateQuadrupleUniqueNumbers(seedValue)
 	if err != nil {
 		panic(err)
 	}
@@ -107,7 +131,7 @@ func multiThreadOperation(img image.Image, password string, encrypt bool) {
 		start := i * (pixels / usableThreads)
 		end := (i+1)*(pixels/usableThreads) - 1
 		wg.Add(1)
-		go operation(&img, &randomNumbers, start, end, &wg, &rgba, &history, &historyMutex, &rgbaMutex)
+		go operation(&img, &randomNumbers, start, end, &wg, &rgba, &quad, &history, &historyMutex, &rgbaMutex)
 	}
 
 	// Last thread
@@ -115,7 +139,7 @@ func multiThreadOperation(img image.Image, password string, encrypt bool) {
 	start := (usableThreads - 1) * (pixels / usableThreads)
 	end := pixels - 1
 	wg.Add(1)
-	go operation(&img, &randomNumbers, start, end, &wg, &rgba, &history, &historyMutex, &rgbaMutex)
+	go operation(&img, &randomNumbers, start, end, &wg, &rgba, &quad, &history, &historyMutex, &rgbaMutex)
 	//
 
 	wg.Wait() // wait for all threads to finish
@@ -155,13 +179,11 @@ func multiThreadOperation(img image.Image, password string, encrypt bool) {
 // length: the length of the array.
 // seed: the seed to use for the random number generator.
 // returns the array of numbers and an error if there is one.
-func generateUniqueRandomArray(length int, seed string) ([]int, error) {
+func generateUniqueRandomArray(length int, seed int64) ([]int, error) {
 	var start = 0
 	var end = length - 1
 
-	seedValue := convertToAscii(seed)
-
-	rng := rand.New(rand.NewSource(int64(seedValue)))
+	rng := rand.New(rand.NewSource(seed))
 
 	numbers := make([]int, length)
 	used := make(map[int]bool)
@@ -195,17 +217,26 @@ func containsElement(arr *map[int]bool, target int) bool {
 	return ok
 }
 
-// convertToAscii converts ASCII characters to decimal values
-// str: string from which to generate the ASCII values
-// returns the ASCII  values consolidated
-func convertToAscii(str string) int {
-	var asciiSlice []int
-	result := 0
+// convertToAscii converts a string into a stable 64-bit seed.
+// str: string from which to generate the seed
+// returns the seed as int64
+func convertToAscii(str string) int64 {
+    sum := sha256.Sum256([]byte(str))
+    seed := binary.LittleEndian.Uint64(sum[:8])
+    return int64(seed)
+}
 
-	for i := 0; i < len(str); i++ {
-		asciiSlice = append(asciiSlice, int(str[i]))
-		result = (result * 100) + int(str[i])
+// generateQuadrupleUniqueNumbers generates RGBA values.
+// seed: the seed to use for the random number generator.
+// returns 4 numbers: R, G, B, A (0-255).
+func generateQuadrupleUniqueNumbers(seed int64) ([]int, error) {
+	rng := rand.New(rand.NewSource(seed))
+
+	numbers := make([]int, 4)
+
+	for i := 0; i < 4; i++ {
+		numbers[i] = rng.Intn(256)
 	}
 
-	return result
+	return numbers, nil
 }

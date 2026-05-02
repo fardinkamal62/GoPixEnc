@@ -1,7 +1,7 @@
 <div align="center"><h1>GoPixEnc</h1></div>
 <div align="center"><a href="https://github.com/fardinkamal62/PixEnc">PixEnc</a> in Go</div>
 <div align="center">Encrypt image by manipulating pixels</div>
-<div align="center" style="color: grey"><sub>Version: 2.2.2</sub></div>
+<div align="center" style="color: grey"><sub>Version: 3.0.0</sub></div>
 <div align="center">
   <strong>
     <a href="https://fardinkamal62.vercel.app/projects/pixenc">Website</a>
@@ -79,7 +79,11 @@ To build for Linux: `GOOS=linux GOARCH=amd64 go build -o build/GoPixEnc_vx.y.z_l
 
 # Release Note
 
-### 2.2.2 (Current)
+### 3.0.0 (Current)
+
+- Implemented XOR algorithm for better encryption
+
+### 2.2.2
 
 - Create `images` folder if not exists
 

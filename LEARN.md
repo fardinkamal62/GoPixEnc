@@ -16,7 +16,8 @@ It gets pixel count, generates random numbers the amount by which pixels are cal
 3. Generate random numbers the amount by which pixels are calculated; ranging from 0 to pixel count.
       
    **Example:** If the image has 1024 pixels, then generate 1024 random numbers ranging from 0 to 1024 and each value will be unique. With the same password, we will get the same 1024 random values everytime. 
-4. Swap RGBA values with corresponding random numbered pixels.
+4. Generate 4 random number for (R, G, B, A)
+5. Swap RGBA values with corresponding random numbered pixels as well as XOR them with the generated random numbers.
       
    **Example:** If the 10-th random number is 3, then swap the 10-th pixel's RGBA value with the 3-rd pixel's RGBA value. So the 10-th pixel's RGBA value will be the 3-rd pixel's RGBA value and the 3-rd pixel's RGBA value will be the 10-th pixel's RGBA value.
 5. Save the image.
