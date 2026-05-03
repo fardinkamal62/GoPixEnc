@@ -2,9 +2,8 @@ package main
 
 import (
 	"crypto/sha256"
-    "encoding/binary"
+	"encoding/binary"
 	"fmt"
-	"github.com/schollz/progressbar/v3"
 	"image"
 	"image/color"
 	"image/draw"
@@ -14,6 +13,8 @@ import (
 	"runtime"
 	"sync"
 	"time"
+
+	"github.com/schollz/progressbar/v3"
 )
 
 // operation performs the operation on the image.
@@ -221,9 +222,9 @@ func containsElement(arr *map[int]bool, target int) bool {
 // str: string from which to generate the seed
 // returns the seed as int64
 func convertToAscii(str string) int64 {
-    sum := sha256.Sum256([]byte(str))
-    seed := binary.LittleEndian.Uint64(sum[:8])
-    return int64(seed)
+	sum := sha256.Sum256([]byte(str))
+	seed := binary.LittleEndian.Uint64(sum[:8])
+	return int64(seed)
 }
 
 // generateQuadrupleUniqueNumbers generates RGBA values.

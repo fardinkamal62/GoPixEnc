@@ -2,22 +2,32 @@ package main
 
 import (
 	"fmt"
-	"github.com/sqweek/dialog"
 	"image"
 	"image/jpeg"
 	"image/png"
 	"os"
+
+	"github.com/sqweek/dialog"
 )
 
-const Version string = "2.2.2"
+const Version string = "3.1.0"
 const ExampleImage string = "images/example.jpg"
 const EncryptedFilename string = "images/encrypt.png"
 const DecryptedFilename string = "images/decrypt.png"
+const divider string = "----------------------------------------------"
+
+const colorReset string = "\033[0m"
+const colorCyan string = "\033[36m"
+const colorYellow string = "\033[33m"
+const colorDim string = "\033[2m"
+const colorBold string = "\033[1m"
 
 func main() {
-	fmt.Println("GoPixEnc v" + Version + "!")
-	fmt.Println("PixEnc implementation in Go.")
-	fmt.Print("\nI want to encrypt(e)/decrypt(d): ")
+	printBanner()
+	fmt.Println(colorDim + "PixEnc implementation in Go." + colorReset)
+	printDivider()
+	fmt.Println(colorCyan + "[1/3] Mode" + colorReset)
+	fmt.Print(colorYellow + "  e = encrypt, d = decrypt > " + colorReset)
 
 	var choice string
 	var FILENAME string
@@ -28,6 +38,7 @@ func main() {
 		panic(err)
 	}
 
+	fmt.Println(colorCyan + "\n[2/3] Source Image" + colorReset)
 	for {
 		FILENAME, err = dialog.File().Title("Select a file").SetStartDir("images").Filter("All image files (*.png;*.jpg;*.jpeg)", "jpg", "jpeg", "png").Load()
 		if err != nil {
@@ -37,11 +48,12 @@ func main() {
 			}
 			FILENAME = ExampleImage
 		}
-		fmt.Println("\nSelected file:", FILENAME+"\n")
+		fmt.Println("\n"+colorBold+"Selected file:"+colorReset, FILENAME+"\n")
 		break // Break the loop if an image is selected
 	}
 
-	fmt.Print("Enter password: ")
+	fmt.Println(colorCyan + "[3/3] Password" + colorReset)
+	fmt.Print(colorYellow + "  Enter password > " + colorReset)
 	var password string
 	_, err = fmt.Scan(&password)
 	if err != nil {
@@ -60,7 +72,7 @@ func main() {
 			panic(err)
 		}
 
-		fmt.Println("Encrypting...")
+		fmt.Println("\nEncrypting...")
 		multiThreadOperation(img, password, true)
 	} else if choice == "d" {
 		img, err := openAndDecodeImage(EncryptedFilename)
@@ -68,7 +80,7 @@ func main() {
 			panic(err)
 		}
 
-		fmt.Println("Decrypting...")
+		fmt.Println("\nDecrypting from", EncryptedFilename+"...")
 		multiThreadOperation(img, password, false)
 	}
 
@@ -101,17 +113,18 @@ func openAndDecodeImage(filename string) (image.Image, error) {
 	}
 
 	var img image.Image
-	if format == "png" {
+	switch format {
+	case "png":
 		img, err = png.Decode(file)
 		if err != nil {
 			return nil, err
 		}
-	} else if format == "jpeg" || format == "jpg" {
+	case "jpeg", "jpg":
 		img, err = jpeg.Decode(file)
 		if err != nil {
 			return nil, err
 		}
-	} else {
+	default:
 		return nil, fmt.Errorf("unsupported format: %s", format)
 	}
 
@@ -126,4 +139,18 @@ func checkFolderExistence() {
 			panic(err)
 		}
 	}
+}
+
+func printBanner() {
+	fmt.Print(colorCyan + "  ____       ____ _      ______           \n" +
+		" / ___| ___ |  _ \\ | ___|  ____|__  _ __  \n" +
+		"| |  _ / _ \\| |_) | |/ _ \\  _| / _ \\| '_ \\\n" +
+		"| |_| | (_) |  __/| |  __/ |__| (_) | | | |\n" +
+		" \\____|\\___/|_|   |_|\\___|_____|\\___/|_| |_|\n" + colorReset)
+	fmt.Println(colorBold + "GoPixEnc v" + Version + colorReset)
+	printDivider()
+}
+
+func printDivider() {
+	fmt.Println(colorCyan + divider + colorReset)
 }
