@@ -142,12 +142,18 @@ func checkFolderExistence() {
 }
 
 func printBanner() {
-	fmt.Print(colorCyan + "  ____       ____ _      ______           \n" +
-		" / ___| ___ |  _ \\ | ___|  ____|__  _ __  \n" +
-		"| |  _ / _ \\| |_) | |/ _ \\  _| / _ \\| '_ \\\n" +
-		"| |_| | (_) |  __/| |  __/ |__| (_) | | | |\n" +
-		" \\____|\\___/|_|   |_|\\___|_____|\\___/|_| |_|\n" + colorReset)
-	fmt.Println(colorBold + "GoPixEnc v" + Version + colorReset)
+	fmt.Print("\033[H\033[2J") // ANSI escape code to clear the screen and move the cursor to the top-left corner
+	banner, err := os.ReadFile("banner.txt")
+	if err == nil {
+		fmt.Print(colorCyan + string(banner) + colorReset)
+	} else {
+		fmt.Print(colorCyan + "  ____       ____ _      ______           \n" +
+			" / ___| ___ |  _ \\ | ___|  ____|__  _ __  \n" +
+			"| |  _ / _ \\| |_) | |/ _ \\  _| / _ \\| '_ \\\n" +
+			"| |_| | (_) |  __/| |  __/ |__| (_) | | | |\n" +
+			" \\____|\\___/|_|   |_|\\___|_____|\\___/|_| |_|\n" + colorReset)
+	}
+	fmt.Println(colorBold + "v" + Version + colorReset)
 	printDivider()
 }
 
